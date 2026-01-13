@@ -1,6 +1,7 @@
 // define store with pinia ts
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { showErrorNotification, showSuccessNotification } from '@/utils/notify';
 
 interface Rocket {
   id: string;
@@ -36,6 +37,7 @@ export const useDataRocketStore = defineStore('dataRocket', {
         const response = await  axios.get('https://api.spacexdata.com/v4/rockets');
         this.rockets = response.data;
       } catch (error) {
+        showErrorNotification('Error', 'Failed to fetch rocket data');
         console.error('Error fetching rocket data:', error);
       } finally {
         this.isLoading = false;
@@ -55,8 +57,8 @@ export const useDataRocketStore = defineStore('dataRocket', {
           country: datas.country,
           firstFlight: datas.first_flight,
         }
-        console.log("🚀 ~ this.detailRocket:", this.detailRocket)
       } catch (error) {
+        showErrorNotification('Error', `Failed to fetch rocket data for ID ${id}`);
         console.error(`Error fetching rocket data for ID ${id}:`, error);
         return null;
       } finally {
@@ -64,13 +66,12 @@ export const useDataRocketStore = defineStore('dataRocket', {
       }
     },
     addRocket(rocket: Rocket) {
+      showSuccessNotification('Success', 'Rocket added successfully');
       this.rockets.push({
         ...rocket,
         id: Date.now().toString(),
-        // add static array for flickr_images
         flickr_images: rocket.flickr_images
       });
-      console.log("🚀 ~ this.rockets:", this.rockets)
     }
   }
 });

@@ -2,6 +2,7 @@
   <v-app>
     <component :is="layout">
       <router-view />
+      <notifications />
     </component>
   </v-app>
 </template>

@@ -13,7 +13,7 @@
       <v-list>
         <v-list-item
           title="Data Rocket"
-          :subtitle="editMode ? `Edit data rocket` : `Tambah data rocket`"
+          subtitle="Tambah data rocket"
         >
           <template #append>
             <v-btn
