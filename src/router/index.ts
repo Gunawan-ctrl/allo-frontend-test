@@ -7,10 +7,20 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { routes } from 'vue-router/auto-routes'
+import AdminLayout from '@/layouts/AdminLayout.vue'
+
+const wrappedRoutes = routes.map((route) => ({
+  ...route,
+  component: route.component,
+  meta: {
+    ...route.meta,
+    layout: AdminLayout,
+  },
+}));
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
+  routes: wrappedRoutes,
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
