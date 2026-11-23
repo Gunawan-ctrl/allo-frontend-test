@@ -1,35 +1,49 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
 
-// Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
-import { routes } from 'vue-router/auto-routes'
+import { createRouter, createWebHistory } from 'vue-router'
+
+import MainLayout from '@/layouts/MainLayout.vue'
+import RocketListPage from '@/pages/RocketListPage.vue'
+import RocketDetailPage from '@/pages/RocketDetailPage.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-})
+  history: createWebHistory(),
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (!localStorage.getItem('vuetify:dynamic-reload')) {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
-    } else {
-      console.error('Dynamic import error, reloading page did not fix it', err)
+  routes: [
+    {
+      path: '/',
+      component: MainLayout,
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: RocketListPage,
+          meta: {
+            title: 'Home',
+          },
+        },
+        {
+          path: 'rockets/:id',
+          name: 'rocket-detail',
+          component: RocketDetailPage,
+          props: true,
+          meta: {
+            title: 'Rocket Details',
+          },
+        },
+      ],
+    },
+  ],
+
+  scrollBehavior() {
+    return {
+      top: 0,
+      behavior: 'smooth',
     }
-  } else {
-    console.error(err)
-  }
+  },
 })
 
-router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload')
+router.beforeEach((to) => {
+  document.title = `${String(to.meta.title)} | Rocket Explorer`
 })
 
 export default router

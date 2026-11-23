@@ -31,6 +31,9 @@ export default [
         },
       ],
       'vue/multi-word-component-names': 'off',
+      // Layout rules that conflict with the code formatter (format on save)
+      'vue/max-attributes-per-line': 'off',
+      'vue/singleline-html-element-content-newline': 'off',
     }
   }
 ]
