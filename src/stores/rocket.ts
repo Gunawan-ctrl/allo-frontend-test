@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { rocketService } from '@/services/rocket.service'
 import type { Rocket, RocketForm } from '@/types/rocket'
-import router from '@/router'
 
 export const useRocketStore = defineStore('rocket', () => {
   const rockets = ref<Rocket[]>([])
@@ -52,8 +51,14 @@ export const useRocketStore = defineStore('rocket', () => {
     selectedRocket.value = null
 
     try {
+      const localRocket = rockets.value.find((rocket) => rocket.id === id)
+
+      if (localRocket) {
+        selectedRocket.value = localRocket
+        return
+      }
+
       const rocket = await rocketService.getRocketById(id)
-      router.push(`/rockets/${id}`)
       selectedRocket.value = rocket
     } catch (err) {
       console.error('Failed to fetch rocket detail:', err)
